@@ -1,103 +1,65 @@
 import { useState } from 'react'
 
-const Header = (props) => {
-  console.log(props)
-  return (
-    <h1>
-      {props.course}
-    </h1>
-  )
-}
+const Title = () => (
+  <div>
+    give feedback
+  </div>
+)
 
-const Total = (props) => {
-  console.log(props)
-  return (
-    <p>
-      Number of exercises {props.parts.map(p => p.exercises).reduce((a, b) => a + b, 0)}
-    </p>
-  )
-}
-
-const Part = (props) => {
-  return (
-    <p>
-      {props.part} {props.exercises}
-    </p>
-  )
-}
-
-const Content = (props) => {
-  console.log(props)
-  return (
-    <>
-      <Part part={props.parts[0].name} exercises={props.parts[0].exercises} />
-      <Part part={props.parts[1].name} exercises={props.parts[1].exercises} />
-      <Part part={props.parts[2].name} exercises={props.parts[2].exercises} />
-    </>
-  )
-}
-
-
-const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
-  }
-
-  return (
-    <div>
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
-    </div>
-  )
-}
-
-const Display = ({ counter }) => <div>{counter}</div>;
-
-
-const Button = ({ onClick, text }) => (
+const Button = ({ butName, onClick }) => (
   <button onClick={onClick}>
-    {text}
+    {butName}
   </button>
 )
 
 
-const App2 = (props) => {
-  const [counter, setCounter] = useState(0)
-
-  // setTimeout(
-  //   () => setCounter(counter + 1),
-  //   1000
-  // )
-
-  function handleClick() {
-    console.log("click plus");
-  }
-
-  const plus_one = () => setCounter(counter + 1);
-  const reset = () => setCounter(0);
-
+const Statistics = ({ statName, data, algo }) => {
+  console.log(statName, data);
   return (
     <div>
-      <Display counter={counter} />
-      <Button onClick={plus_one} text={"plus_one"} />
-      <Button onClick={reset} text={"reset"} />
+      {statName} {algo(data)}
     </div>
   )
 }
 
-export default App2
+const naN2Zero = (num) => isNaN(num) ? 0 : num
+
+const sum = (data) => data.reduce((a, b) => a + b)
+const avg = (data) => naN2Zero((data[0] * 1 + data[2] * (-1)) / sum(data))
+const positive = (data) => (naN2Zero((data[0] / sum(data))) * 100) + '%'
+const origin = (data) => data
+
+const DisplayStat = ({ scoreList }) => scoreList.every(review => review == 0)
+  ? (<div>No feedback given!</div>)
+  : (<div>
+    <Statistics statName={'good'} data={scoreList[0]} algo={origin} />
+    <Statistics statName={'neutral'} data={scoreList[1]} algo={origin} />
+    <Statistics statName={'bad'} data={scoreList[2]} algo={origin} />
+    <Statistics statName={'all'} data={scoreList} algo={sum} />
+    <Statistics statName={'avg'} data={scoreList} algo={avg} />
+    <Statistics statName={'positive'} data={scoreList} algo={positive} />
+  </div>)
+
+
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+
+  const scoreList = [good, neutral, bad]
+
+  return (
+    <div>
+      <Title />
+      <br></br>
+      <Button butName={'good'} onClick={() => setGood(good + 1)} />
+      <Button butName={'neutral'} onClick={() => setNeutral(neutral + 1)} />
+      <Button butName={'bad'} onClick={() => setBad(bad + 1)} />
+      <DisplayStat scoreList={scoreList}/>
+    </div>
+  )
+}
+
+export default App
