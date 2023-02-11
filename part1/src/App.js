@@ -66,6 +66,9 @@ const App = () => {
   )
 }
 
+
+// -----------------------------------------------------------------------------------
+
 const Display = ({ counter }) => <div>{counter}</div>;
 
 
@@ -100,4 +103,35 @@ const App2 = (props) => {
   )
 }
 
-export default App2
+// -----------------------------------------------------------------------------------
+
+
+const AppD = () => {
+  const [clicks, setClicks] = useState({
+    left: 0, right: 0
+  })
+  const [allClicks, setAll] = useState([])
+
+  const handleLeftClick = () => {
+    setAll(allClicks.concat('L'));
+    setClicks({ ...clicks, left: clicks.left + 1 });
+  }
+
+
+  const handleRightClick = () => {
+    setAll(allClicks.concat('R'));
+    setClicks({ ...clicks, right: clicks.right + 1 });
+  }
+
+  return (
+    <div>
+      {clicks.left}
+      <button onClick={handleLeftClick}>left</button>
+      <button onClick={handleRightClick}>right</button>
+      {clicks.right}
+      <p>all clicks: {allClicks.join(' ')}</p>
+    </div>
+  )
+}
+
+export default AppD
