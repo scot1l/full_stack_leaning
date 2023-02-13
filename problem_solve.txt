@@ -1,0 +1,5 @@
+1. npm run build => Error: error:0308010C:digital envelope routines::unsupported
+On PowerShell:
+$env:NODE_OPTIONS = "--openssl-legacy-provider"
+then retry
+
